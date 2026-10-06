@@ -1,0 +1,12 @@
+{
+  "polygons_converted": 107,
+  "existing_boxes": 12,
+  "images_verified": 72,
+  "split_images": {
+    "train": 51,
+    "valid": 14,
+    "test": 7
+  },
+  "exact_duplicate_groups_across_splits": [],
+  "note": "Polygon annotations converted to enclosing axis-aligned YOLO boxes. Existing five-field boxes preserved. Images unchanged. Near-duplicate images not assessed. Training not performed."
+}

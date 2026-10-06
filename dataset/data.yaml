@@ -1,0 +1,11 @@
+train: train/images
+val: valid/images
+test: test/images
+nc: 1
+names: ['Credit_card']
+roboflow:
+  workspace: workspace1-ttx3t
+  project: credit-card-altdh-hijjm
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/workspace1-ttx3t/credit-card-altdh-hijjm/dataset/1
