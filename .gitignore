@@ -5,3 +5,4 @@ evidence/
 __pycache__/
 *.pt
 *.islenc
+*.cache
