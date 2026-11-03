@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+nc: 2
+names:
+- back
+- front
+roboflow:
+  workspace: aadhar-wrezd
+  project: pancard-dtefw
+  version: 6
+  license: MIT
+  url: https://universe.roboflow.com/aadhar-wrezd/pancard-dtefw/dataset/6

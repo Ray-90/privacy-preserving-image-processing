@@ -1,0 +1,81 @@
+{
+  "doc": {
+    "archive": "doc.v1i.yolov8.zip",
+    "metadata": {
+      "train": "../train/images",
+      "val": "../valid/images",
+      "test": "../test/images",
+      "nc": 9,
+      "names": [
+        "Aadhaar Back",
+        "Aadhaar Front",
+        "Aadhaar Full",
+        "Other",
+        "Pan card",
+        "Passport Back",
+        "Passport Front",
+        "Voter Id Back",
+        "Voter Id Front"
+      ],
+      "roboflow": {
+        "workspace": "subham",
+        "project": "doc-7vb0p",
+        "version": 1,
+        "license": "Public Domain",
+        "url": "https://universe.roboflow.com/subham/doc-7vb0p/dataset/1"
+      }
+    },
+    "class_mapping": {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "4": 1
+    }
+  },
+  "pan": {
+    "archive": "PanCard.v6i.yolov8.zip",
+    "metadata": {
+      "train": "../train/images",
+      "val": "../valid/images",
+      "test": "../test/images",
+      "nc": 2,
+      "names": [
+        "back",
+        "front"
+      ],
+      "roboflow": {
+        "workspace": "aadhar-wrezd",
+        "project": "pancard-dtefw",
+        "version": 6,
+        "license": "MIT",
+        "url": "https://universe.roboflow.com/aadhar-wrezd/pancard-dtefw/dataset/6"
+      }
+    },
+    "class_mapping": {
+      "0": 1,
+      "1": 1
+    }
+  },
+  "payment": {
+    "archive": "credit-card-detector.v2-roboflow-instant-1--eval-.yolov8.zip",
+    "metadata": {
+      "train": "../train/images",
+      "val": "../valid/images",
+      "test": "../test/images",
+      "nc": 1,
+      "names": [
+        "valid-credit-card"
+      ],
+      "roboflow": {
+        "workspace": "khaled-6hzrf",
+        "project": "credit-card-detector-mltzy",
+        "version": 2,
+        "license": "MIT",
+        "url": "https://universe.roboflow.com/khaled-6hzrf/credit-card-detector-mltzy/dataset/2"
+      }
+    },
+    "class_mapping": {
+      "0": 2
+    }
+  }
+}

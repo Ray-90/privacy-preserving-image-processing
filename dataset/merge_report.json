@@ -1,0 +1,66 @@
+{
+  "counts": {
+    "input_images": 2730,
+    "non_target_annotations_removed": 244,
+    "no_target_images_excluded": 341,
+    "polygons_converted": 966,
+    "target_images_before_dedup": 2389,
+    "conflicting_duplicate_images_excluded": 2,
+    "near_duplicate_links": 62,
+    "evaluation_sibling_images_omitted": 138
+  },
+  "output_images": 2249,
+  "unique_source_groups": 1665,
+  "splits": {
+    "train": {
+      "images": 1917,
+      "instances": {
+        "aadhaar_card": 193,
+        "pan_card": 1041,
+        "payment_card": 1031
+      },
+      "images_containing_class": {
+        "aadhaar_card": 193,
+        "pan_card": 1011,
+        "payment_card": 713
+      },
+      "source_groups": 1333
+    },
+    "valid": {
+      "images": 166,
+      "instances": {
+        "aadhaar_card": 8,
+        "pan_card": 122,
+        "payment_card": 67
+      },
+      "images_containing_class": {
+        "aadhaar_card": 8,
+        "pan_card": 120,
+        "payment_card": 38
+      },
+      "source_groups": 166
+    },
+    "test": {
+      "images": 166,
+      "instances": {
+        "aadhaar_card": 8,
+        "pan_card": 122,
+        "payment_card": 54
+      },
+      "images_containing_class": {
+        "aadhaar_card": 8,
+        "pan_card": 120,
+        "payment_card": 38
+      },
+      "source_groups": 166
+    }
+  },
+  "seed": 42,
+  "limitations": [
+    "Grouping uses filename families and conservative perceptual similarity, not verified physical-document identities.",
+    "Only target-labelled images retained; excluded other document images are not assumed reliable negatives.",
+    "Evaluation uses one representative per group; original non-augmented image availability is not guaranteed.",
+    "Debit-card coverage and annotation completeness are not established.",
+    "Annotation quality in the payment dataset export is not independently verified."
+  ]
+}

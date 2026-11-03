@@ -1,0 +1,12 @@
+[
+  {
+    "source": "pan",
+    "image": "train/images/18168d7d-2bde-4f1a-ac64-2aaf0c0baa15_pancard_content_1706524155_jpeg.rf.32e4fd4b8d5c956f2c74e7aae0661107.jpg",
+    "reason": "identical pixels with conflicting labels"
+  },
+  {
+    "source": "pan",
+    "image": "train/images/5a7aeae8-4283-4136-9d4c-e5ee406d5132_pancard_content_1695706954_jpeg.rf.4ab36fbf2a59a6d36bb1be297fc897de.jpg",
+    "reason": "identical pixels with conflicting labels"
+  }
+]

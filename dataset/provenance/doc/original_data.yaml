@@ -1,0 +1,20 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+nc: 9
+names:
+- Aadhaar Back
+- Aadhaar Front
+- Aadhaar Full
+- Other
+- Pan card
+- Passport Back
+- Passport Front
+- Voter Id Back
+- Voter Id Front
+roboflow:
+  workspace: subham
+  project: doc-7vb0p
+  version: 1
+  license: Public Domain
+  url: https://universe.roboflow.com/subham/doc-7vb0p/dataset/1

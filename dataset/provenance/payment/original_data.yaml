@@ -1,0 +1,12 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+nc: 1
+names:
+- valid-credit-card
+roboflow:
+  workspace: khaled-6hzrf
+  project: credit-card-detector-mltzy
+  version: 2
+  license: MIT
+  url: https://universe.roboflow.com/khaled-6hzrf/credit-card-detector-mltzy/dataset/2
