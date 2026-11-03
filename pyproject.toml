@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "privacy-guard"
+version = "1.8.0"
+description = "YOLO private-document detection and selective hybrid encryption"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["cryptography>=46,<51", "Pillow>=11,<13", "PyYAML>=6,<7"]
+
+[project.optional-dependencies]
+yolo = ["ultralytics>=8.3,<9", "opencv-python>=4.8,<5"]
+test = ["numpy>=1.24,<3"]
+
+[project.scripts]
+privacy-guard = "privacy_guard.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
