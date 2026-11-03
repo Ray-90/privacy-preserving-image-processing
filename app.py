@@ -108,6 +108,22 @@ def restore_image():
           f"restored pixel hash: {'PASS' if report['restored_pixel_sha256_match'] else 'FAIL'}")
 
 
+def delete_image():
+    records = show_entries()
+    if not records:
+        return
+    choice = input('Which number should be deleted? ').strip()
+    if not choice.isdecimal() or not 1 <= int(choice) <= len(records):
+        print('Choose a number from the list.')
+        return
+    record = records[int(choice) - 1]
+    if input(f"Type DELETE to remove {record['name']} ({record['id'][4:12]}): ").strip() != 'DELETE':
+        print('Deletion cancelled.')
+        return
+    ImageStore(STORE).delete(record['id'])
+    print(f"Deleted saved image {record['id'][4:12]}.")
+
+
 def main():
     while True:
         print('\nPrivacy Guard')
@@ -115,9 +131,10 @@ def main():
         print('2. List saved images')
         print('3. Restore an image')
         print('4. Create keys (first time only)')
-        print('5. Exit')
+        print('5. Delete a saved image')
+        print('6. Exit')
         try:
-            choice = input('Choose 1–5: ').strip()
+            choice = input('Choose 1–6: ').strip()
             if choice == '1':
                 add_image()
             elif choice == '2':
@@ -127,9 +144,11 @@ def main():
             elif choice == '4':
                 create_keys()
             elif choice == '5':
+                delete_image()
+            elif choice == '6':
                 return
             else:
-                print('Choose a number from 1 to 5.')
+                print('Choose a number from 1 to 6.')
         except (ValueError, OSError, ImportError, KeyError, RuntimeError) as exc:
             print(f'Could not complete that action: {exc}')
         except (EOFError, KeyboardInterrupt):

@@ -36,7 +36,10 @@ def load_public(path):
 def load_private(path, password):
     if not password:
         raise ValueError('A nonempty private-key password is required.')
-    key = serialization.load_pem_private_key(read_bounded(path, 65536), password=password)
+    try:
+        key = serialization.load_pem_private_key(read_bounded(path, 65536), password=password)
+    except (ValueError, TypeError) as exc:
+        raise ValueError('Incorrect private-key password or invalid private.pem file.') from exc
     if not isinstance(key, rsa.RSAPrivateKey) or not 2048 <= key.key_size <= 8192:
         raise ValueError('Expected an RSA private key between 2048 and 8192 bits.')
     return key

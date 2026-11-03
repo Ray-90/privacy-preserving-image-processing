@@ -76,17 +76,18 @@ from SSD remnants, synced folders, or backups.
 **Easiest way to run it:** After installing below, open PowerShell in this
 project folder and run `.\.venv\Scripts\python.exe gui.py`. The window lets you
 create keys, choose and protect an image, list saved encryptions, view a
-protected preview, and restore a selected image to a PNG location you choose.
+protected preview, restore a selected image to a PNG location you choose, or
+delete one saved entry after confirmation. Incorrect passwords show an error;
+failed restoration does not create a restored PNG.
 Everything runs locally. The terminal menu is still available with
 `.\.venv\Scripts\python.exe app.py`.
 
 Set `MODEL_WEIGHTS` near the top of `app.py` once to your trained three-class
-`best.pt`. The default is `runs/train/weights/best.pt`; if it was saved elsewhere,
+`best.pt`. The default is `runs/train-2/weights/best.pt`; if it was saved elsewhere,
 use a raw Windows path such as
 `Path(r'C:\Users\you\Downloads\IS\runs\train2\weights\best.pt')`.
 The window and terminal menu use that same model for every image. Encrypted
-bundles are saved under `protected_images/`. The dataset and trained model are
-separate from this code ZIP.
+bundles are saved under `protected_images/`.
 
 The window offers `black`, `texture`, or `inpaint` for the hidden area. The menu
 uses the same three choices. Inpainting
@@ -220,6 +221,9 @@ The image folder is `protected_images/<ID>/` and contains `protected.png`,
 private key. Choose a label that does not disclose private information. The
 private key and both passwords remain outside the store. A fresh AES key and nonce
 are still generated for each image, even when reusing the RSA key pair.
+The GUI's Delete button and terminal menu option 5 remove only the selected
+folder after confirmation. They do not remove the key pair or guarantee secure
+erasure of previously deleted data or external copies.
 The CLI reports cleanup status on stderr, leaving the JSON from `image-add`
 on stdout for the PowerShell example above. It warns on stderr for recognized
 synced folders. The desktop window asks you to confirm when it recognizes one.

@@ -145,6 +145,8 @@ class PrivacyGuardWindow:
         ttk.Label(details, textvariable=self.selected_info, wraplength=740).pack(anchor='w')
         self.restore_button = ttk.Button(details, text='Restore selected image...', command=self.restore)
         self.restore_button.pack(anchor='w', pady=(9, 0))
+        self.delete_button = ttk.Button(details, text='Delete selected image...', command=self.delete_image)
+        self.delete_button.pack(anchor='w', pady=(6, 0))
         ttk.Label(details, text='Restoration asks for this image’s password and the password '
                   'chosen when the key pair was created.', wraplength=740).pack(anchor='w', pady=(6, 0))
 
@@ -172,8 +174,9 @@ class PrivacyGuardWindow:
                               f'Model not found: {self.model}. Set MODEL_WEIGHTS in app.py to your best.pt.')
 
     def update_restore_button(self):
-        self.restore_button.configure(state='normal' if self.selected_id() and not self.busy
-                                      else 'disabled')
+        state = 'normal' if self.selected_id() and not self.busy else 'disabled'
+        self.restore_button.configure(state=state)
+        self.delete_button.configure(state=state)
 
     def browse(self):
         selected = filedialog.askopenfilename(
@@ -243,6 +246,7 @@ class PrivacyGuardWindow:
         self.busy = True
         self.protect_button.configure(state='disabled')
         self.restore_button.configure(state='disabled')
+        self.delete_button.configure(state='disabled')
         self.key_button.configure(state='disabled')
         self.browse_button.configure(state='disabled')
         self.status.set(description)
@@ -253,7 +257,7 @@ class PrivacyGuardWindow:
             self.browse_button.configure(state='normal')
             self.update_restore_button()
             self.update_setup()
-            if error:
+            if error is not None:
                 self.status.set(f'Failed: {error}')
                 messagebox.showerror('Privacy Guard', error, parent=self.root)
             else:
@@ -263,7 +267,8 @@ class PrivacyGuardWindow:
             try:
                 result = operation()
             except Exception as exc:
-                self.root.after(0, lambda error=str(exc): finished(error=error))
+                detail = str(exc).strip() or f'{type(exc).__name__}: operation failed.'
+                self.root.after(0, lambda error=detail: finished(error=error))
             else:
                 self.root.after(0, lambda: finished(result=result))
 
@@ -361,6 +366,24 @@ class PrivacyGuardWindow:
                                 parent=self.root)
 
         self.run_task('Authenticating and restoring the image...', operation, done)
+
+    def delete_image(self):
+        image_id = self.selected_id()
+        if not image_id or self.busy:
+            return
+        name = self.tree.item(image_id, 'values')[0]
+        if not messagebox.askyesno('Delete saved image',
+                f'Delete "{name}" ({image_id[4:12]})?\n\n'
+                'Its protected preview and encrypted regions will be removed. '
+                'You will not be able to restore it afterward.', parent=self.root):
+            return
+
+        def done(_record):
+            self.refresh()
+            self.status.set(f'Deleted saved image {image_id[4:12]}.')
+
+        self.run_task('Deleting selected saved image...',
+                      lambda: ImageStore(self.store_path).delete(image_id), done)
 
     def create_keys(self):
         directory = self.public_key.parent

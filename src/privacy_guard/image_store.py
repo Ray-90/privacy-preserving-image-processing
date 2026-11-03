@@ -76,6 +76,19 @@ class ImageStore:
                     results.append(self._record(safe))
         return sorted(results, key=lambda r: (r['created_utc'], r['id']))
 
+    def delete(self, image_id):
+        """Remove only the selected bundle; refuse unexpected contents."""
+        bundle = self._bundle(image_id)
+        record = self._record(bundle)
+        allowed = {'protected.png', 'regions.islenc', 'image.json', 'forensic_report.json'}
+        for entry in bundle.iterdir():
+            if entry.name not in allowed or not entry.is_file() or entry.is_symlink():
+                raise ValueError('Saved image has unexpected contents; delete it manually after inspection.')
+        for filename in ('protected.png', 'regions.islenc', 'forensic_report.json', 'image.json'):
+            (bundle / filename).unlink(missing_ok=True)
+        bundle.rmdir()
+        return record
+
     def restore(self, image_id, destination, private_key, password, *, image_password):
         bundle = self._bundle(image_id)
         self._record(bundle)

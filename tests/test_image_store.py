@@ -19,6 +19,30 @@ from privacy_guard.pipeline import protect_image
 
 
 class SimpleImageStoreTests(unittest.TestCase):
+    def test_delete_only_selected_entry_and_refuse_unexpected_files(self):
+        with tempfile.TemporaryDirectory() as folder:
+            store = Path(folder) / 'protected_images'
+            store.mkdir()
+            ids = ['img-' + c * 32 for c in ('a', 'b')]
+            for image_id in ids:
+                bundle = store / image_id
+                bundle.mkdir()
+                (bundle / 'image.json').write_text(json.dumps({
+                    'id': image_id, 'name': 'Synthetic', 'created_utc': '2026-11-03T00:00:00Z'}))
+                (bundle / 'protected.png').write_bytes(b'preview')
+                (bundle / 'regions.islenc').write_bytes(b'encrypted')
+            extra = store / ids[0] / 'notes.txt'
+            extra.write_text('keep')
+            with self.assertRaisesRegex(ValueError, 'unexpected contents'):
+                ImageStore(store).delete(ids[0])
+            self.assertTrue(extra.exists())
+            extra.unlink()
+            self.assertEqual(ImageStore(store).delete(ids[0])['id'], ids[0])
+            self.assertFalse((store / ids[0]).exists())
+            self.assertEqual([r['id'] for r in ImageStore(store).list()], [ids[1]])
+            with self.assertRaisesRegex(ValueError, 'Invalid image ID'):
+                ImageStore(store).delete('../keys')
+
     def test_add_list_restore_with_shared_key_and_wrong_password(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
@@ -52,7 +76,7 @@ class SimpleImageStoreTests(unittest.TestCase):
                 self.assertEqual(report['authenticated_image_id'], record['id'])
                 with Image.open(output) as restored:
                     self.assertEqual(restored.tobytes(), expected_pixels[index])
-            with self.assertRaises(ValueError):
+            with self.assertRaisesRegex(ValueError, 'Incorrect private-key password'):
                 ImageStore(store).restore(records[0]['id'], root/'wrong.png',
                                           root/'keys/private.pem', b'wrong-password',
                                           image_password=image_passwords[0])
