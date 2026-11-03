@@ -1,14 +1,14 @@
 # Privacy Guard
 
-**Version 1.8.0 reorganizes the desktop window into two tabs:** **Protect an
+**The desktop window uses two tabs:** **Protect an
 image** and **Saved images & restore**. The first shows key and model readiness,
 photo selection, a description of each preview style, and a clear reminder that
 the selected original is removed after successful protection. The second shows
-the saved-image list, a protected preview, full ID, and restoration action.
+the saved-image list, a protected preview, full ID, restoration and confirmed deletion.
 The image-password and private-key-password prompts now explain which password
-is needed. Successful protection opens the saved-images tab with the new image
-selected; status messages stay visible at the bottom. This is a GUI-only change
-to the workflow and does not change the encrypted file format.
+is needed. Incorrect passwords display an error without writing a restored image.
+Successful protection opens the saved-images tab with the new image selected;
+status messages stay visible at the bottom. The encrypted file format is unchanged.
 
 **Version 1.7.0 adds `texture` as a preview fill option.** It copies pixels
 only from clean, unmasked background around the detected boxes, matches the
@@ -154,7 +154,7 @@ The convenience command `privacy-guard` is equivalent to
 | `src/privacy_guard/crypto/format.py` | Existing encrypted-container constants |
 | `src/privacy_guard/imaging/operations.py` | Image orientation, normalization and region validation |
 | `src/privacy_guard/pipeline.py` | Crop, protect, mask and restore document regions |
-| `src/privacy_guard/image_store.py` | Assign image IDs and locate protected folders without a database |
+| `src/privacy_guard/image_store.py` | Assign image IDs, locate and delete selected protected folders without a database |
 | `src/privacy_guard/isolation.py` | Start one process per protection and warn about common synced locations |
 | `src/privacy_guard/protection_worker.py` | Internal process that detects, protects and removes a selected source |
 | `gui.py` | Local window for protecting, previewing, listing and restoring images |
@@ -176,8 +176,8 @@ library functions receive password bytes as arguments.
 
 ## Dataset and model
 
-Keep the combined dataset separate from source code. Place `dataset/` beside
-`pyproject.toml`, or supply its absolute path. It must contain `data.yaml`,
+The repository includes the combined `dataset/` beside `pyproject.toml`.
+You may also supply an absolute path to another dataset. It must contain `data.yaml`,
 `train/images`, `train/labels`, `valid/images`, `valid/labels`, and optionally
 `test/images` and `test/labels`.
 
@@ -192,8 +192,8 @@ Class IDs are fixed:
 ```powershell
 python -m privacy_guard check --dataset dataset
 python -m privacy_guard train --dataset dataset --epochs 50 --device cpu
-python -m privacy_guard evaluate --dataset dataset --weights runs/train/weights/best.pt --split test
-python -m privacy_guard predict --source sample.jpg --weights runs/train/weights/best.pt
+python -m privacy_guard evaluate --dataset dataset --weights runs/train-2/weights/best.pt --split test
+python -m privacy_guard predict --source sample.jpg --weights runs/train-2/weights/best.pt
 ```
 
 Training starts from `yolov8n.pt` by default; its initial download needs internet.
@@ -210,7 +210,7 @@ assign a random ID to each protected folder. You can use your **existing**
 a key pair already. The store folder is created by the first `image-add`.
 
 ```powershell
-$entry = python -m privacy_guard image-add --store protected_images --input sample.jpg --weights runs/train/weights/best.pt --public-key keys/public.pem --name "Demo document" | ConvertFrom-Json
+$entry = python -m privacy_guard image-add --store protected_images --input sample.jpg --weights runs/train-2/weights/best.pt --public-key keys/public.pem --name "Demo document" | ConvertFrom-Json
 python -m privacy_guard image-list --store protected_images
 python -m privacy_guard image-restore --store protected_images --id $entry.id --private-key keys/private.pem --output restored.png
 ```
@@ -256,7 +256,7 @@ Generate keys once. Reuse your existing keys if you already have them.
 
 ```powershell
 python -m privacy_guard keygen --directory keys
-python -m privacy_guard protect --input sample.jpg --weights runs/train/weights/best.pt --public-key keys/public.pem --output protected_sample
+python -m privacy_guard protect --input sample.jpg --weights runs/train-2/weights/best.pt --public-key keys/public.pem --output protected_sample
 python -m privacy_guard restore --image protected_sample/protected.png --regions protected_sample/regions.islenc --private-key keys/private.pem --output restored.png
 ```
 
@@ -304,8 +304,10 @@ python -m privacy_guard decrypt --input sample.islenc --output recovered.jpg --p
 
 Existing arguments remain the same. Paths resolve relative to your terminal's
 working directory. The installed package can run from any folder, using absolute
-paths when needed. Move/copy your dataset and trained weights separately; neither
-is included in this code archive. Do not commit private keys or private images.
+paths when needed. This repository includes the combined dataset and the trained
+`runs/train-2/weights/best.pt` checkpoint. `sample.jpg` in the examples is a
+user-supplied test photo; place it outside `dataset/` before protection. Do not
+commit private keys, saved bundles or private images.
 
 ## Testing
 
